@@ -1,50 +1,57 @@
+using System.Runtime.CompilerServices;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    private float horizontal;
+    private float speed = 8f;
+    private float jumpingPower = 10f;
+    private bool isFacingRight = true;
 
-    [Header("Ground Check Settings")]
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
-
-    private Rigidbody2D rb;
-    private float moveInput;
-    private bool isGrounded;
-
-    void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
 
     void Update()
     {
-        // Get horizontal input (-1, 0, 1)
-        moveInput = Input.GetAxisRaw("Horizontal");
+        horizontal = Input.GetAxisRaw("Horizontal");
 
-        // Flip player sprite when changing direction
-        if (moveInput != 0)
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            transform.localScale = new Vector3(Mathf.Sign(moveInput), 1, 1);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingPower);
         }
 
-        // Jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0f) // Fixed misplaced parenthesis
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); // Fixed line
+            // Reduce the jump height if the jump button is released early
+            // This allows for a variable jump height based on how long the button is held
+            // Increase or decrease the multiplier to adjust the effect
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
         }
+
+        Flip();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        // Move player horizontally
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocity.y);
+    }
 
-        // Check if grounded
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+    private bool IsGrounded() // Fixed duplicate FixedUpdate method and corrected its return type
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+    }
+
+    private void Flip()
+    {
+        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+        {
+            isFacingRight = !isFacingRight;
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1f;
+            transform.localScale = localScale;
+        }
     }
 }
