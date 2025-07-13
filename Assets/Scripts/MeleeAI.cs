@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Collections;
 using UnityEngine;
 
 // Inspector screams at you if you forget it
@@ -9,12 +10,18 @@ public class AI : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private float speed = 5.0f;
     
+    [Header("Damage")]
+    [SerializeField] private int damage = 10;
+    
     [Header("Knockback")]
     [SerializeField] private float knockbackForce = 5.0f;
     [SerializeField] private float knockbackTime = 0.25f;
     
+    [Header("Debug")]
+    [SerializeField] private bool canMove = true;
+    [SerializeField] private bool canDamage = true;
+    
     private Rigidbody2D rb;
-    private bool canMove = true;
 
     void Awake()
     {
@@ -30,9 +37,6 @@ public class AI : MonoBehaviour
         // Lock on and move towards the player
         Vector2 dir = (target.position - transform.position).normalized;
         rb.linearVelocity = dir * speed;
-        
-        
-        
     }
     
     void OnCollisionEnter2D(Collision2D col)
@@ -42,6 +46,12 @@ public class AI : MonoBehaviour
 
         // Get hit away from player
         Vector2 away = (transform.position - col.transform.position).normalized;
+        
+        if (canDamage)
+        {
+            PlayerHealth hp = col.collider.GetComponent<PlayerHealth>();
+            if (hp != null) hp.TakeDamage(damage);
+        }
 
         // Clear hunting and knockback
         rb.linearVelocity = Vector2.zero;
