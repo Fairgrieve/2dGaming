@@ -446,8 +446,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 889778039}
   speed: 4
+  damage: 10
   knockbackForce: 5
   knockbackTime: 0.5
+  canMove: 1
+  canDamage: 1
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,6 +681,7 @@ GameObject:
   - component: {fileID: 889778040}
   - component: {fileID: 889778042}
   - component: {fileID: 889778041}
+  - component: {fileID: 889778043}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -828,6 +832,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &889778043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889778038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3686684ba77d4d34a94a377dd69ed361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
 --- !u!1 &1348534315
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,8 +953,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 889778039}
   speed: 2
+  damage: 10
   knockbackForce: 10
   knockbackTime: 0.25
+  canMove: 1
+  canDamage: 1
 --- !u!114 &1348534319
 MonoBehaviour:
   m_ObjectHideFlags: 0
