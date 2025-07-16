@@ -2,6 +2,9 @@ using System.Collections;
 using Unity.Collections;
 using UnityEngine;
 
+// hahah lmao im doing some work
+// hahaha lmao im finishing michaels stuff haha
+
 // Inspector screams at you if you forget it
 [RequireComponent(typeof(Rigidbody2D))]
 public class AI : MonoBehaviour
